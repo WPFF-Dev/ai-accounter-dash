@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222 84% 5%;
+    --surface: 0 0% 100%;
+    --surface-raised: 210 40% 96%;
+    --surface-overlay: 0 0% 100%;
+    --border: 214 32% 91%;
+    --muted: 210 40% 96%;
+    --muted-fg: 215 16% 47%;
+    --primary: 217 91% 60%;
+    --primary-fg: 0 0% 100%;
+    --success: 160 84% 39%;
+    --danger: 0 72% 51%;
+    --warning: 38 92% 50%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 222 84% 5%;
+    --foreground: 210 40% 98%;
+    --surface: 217 33% 11%;
+    --surface-raised: 215 28% 17%;
+    --surface-overlay: 217 33% 14%;
+    --border: 217 33% 20%;
+    --muted: 217 33% 15%;
+    --muted-fg: 215 20% 65%;
+    --primary: 213 94% 68%;
+    --primary-fg: 222 84% 5%;
+    --success: 158 64% 52%;
+    --danger: 0 91% 71%;
+    --warning: 43 96% 56%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-[hsl(var(--border))];
+  }
+
+  body {
+    @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
+    font-family: 'Inter', system-ui, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-[hsl(var(--border))] rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-[hsl(var(--muted-fg))];
+  }
+
+  /* RTL support */
+  [dir='rtl'] .sidebar { right: 0; left: auto; }
+  [dir='rtl'] .ml-auto { margin-right: auto; margin-left: 0; }
+}
+
+@layer components {
+  .card {
+    @apply bg-[hsl(var(--surface))] border border-[hsl(var(--border))] rounded-2xl;
+  }
+
+  .card-raised {
+    @apply bg-[hsl(var(--surface-raised))] border border-[hsl(var(--border))] rounded-2xl;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl
+           bg-brand-500 hover:bg-brand-600 active:bg-brand-700
+           text-white font-medium text-sm
+           transition-all duration-150
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl
+           bg-[hsl(var(--surface-raised))] hover:bg-[hsl(var(--muted))]
+           border border-[hsl(var(--border))]
+           text-[hsl(var(--foreground))] font-medium text-sm
+           transition-all duration-150
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-3 py-2 rounded-lg
+           hover:bg-[hsl(var(--muted))]
+           text-[hsl(var(--muted-fg))] hover:text-[hsl(var(--foreground))] font-medium text-sm
+           transition-all duration-150
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500;
+  }
+
+  .input {
+    @apply w-full px-3 py-2 rounded-xl text-sm
+           bg-[hsl(var(--surface))] border border-[hsl(var(--border))]
+           text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-fg))]
+           focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent
+           transition-colors duration-150;
+  }
+
+  .select {
+    @apply input appearance-none cursor-pointer pr-8;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-blue { @apply badge bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300; }
+  .badge-green { @apply badge bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300; }
+  .badge-red { @apply badge bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300; }
+  .badge-yellow { @apply badge bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300; }
+
+  .stat-card {
+    @apply card p-5 flex flex-col gap-2 hover:shadow-card-hover transition-shadow duration-200;
+  }
+
+  .nav-link {
+    @apply flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium
+           text-[hsl(var(--muted-fg))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]
+           transition-all duration-150;
+  }
+
+  .nav-link.active {
+    @apply bg-brand-500/10 text-brand-500 dark:text-brand-400;
+  }
+}
+
+/* Chart tooltips */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  @apply !bg-[hsl(var(--surface))] !border-[hsl(var(--border))] !rounded-xl !shadow-card;
+}
+
+/* Animation utilities */
+.animate-in {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Number formatting */
+.tabular-nums { font-variant-numeric: tabular-nums; }
