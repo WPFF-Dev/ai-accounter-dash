@@ -14,10 +14,11 @@ interface Props {
   expanded?: boolean
 }
 
-function CustomTooltip({ active, payload, label }: {
+function CustomTooltip({ active, payload, label, currency }: {
   active?: boolean
   payload?: { name: string; value: number; color: string }[]
   label?: string
+  currency?: string
 }) {
   if (!active || !payload?.length) return null
   return (
@@ -29,7 +30,7 @@ function CustomTooltip({ active, payload, label }: {
             <div className="w-2 h-2 rounded-full" style={{ background: p.color }} />
             <span className="capitalize">{p.name}</span>
           </div>
-          <span className="font-semibold tabular-nums">{formatCurrency(p.value, currency)}</span>
+          <span className="font-semibold tabular-nums">{formatCurrency(p.value, currency ?? 'USD')}</span>
         </div>
       ))}
     </div>
@@ -83,7 +84,7 @@ export default function TimeSeriesChart({ analytics, loading, expanded }: Props)
               tickLine={false}
               tickFormatter={(v) => `$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip currency={currency} />} />
             <Legend
               wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }}
               formatter={(value) => <span className="capitalize text-[hsl(var(--foreground))]">{value}</span>}
