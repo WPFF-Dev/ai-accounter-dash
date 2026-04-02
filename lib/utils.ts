@@ -8,11 +8,19 @@ export function cn(...inputs: ClassValue[]) {
 
 // ─── Currency ─────────────────────────────────────────────────────────────
 
+const CURRENCY_LOCALE: Record<string, string> = {
+  UAH: 'uk-UA',
+  RUB: 'ru-RU',
+  EUR: 'de-DE',
+  GBP: 'en-GB',
+  USD: 'en-US',
+}
+
 export function formatCurrency(
   amount: number,
   currency = 'USD',
-  locale = 'en-US'
 ): string {
+  const locale = CURRENCY_LOCALE[currency.toUpperCase()] ?? 'en-US'
   try {
     return new Intl.NumberFormat(locale, {
       style: 'currency',
