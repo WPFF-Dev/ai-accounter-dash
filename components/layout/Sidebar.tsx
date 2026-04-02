@@ -2,10 +2,13 @@
 
 import { usePathname, useRouter } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { BarChart3, FileSpreadsheet, LogOut, X } from 'lucide-react'
+import { BarChart3, FileSpreadsheet, LogOut, X, TableProperties } from 'lucide-react'
 import { useI18n } from '@/lib/i18n'
 import { cn } from '@/lib/utils'
+import { loadAllConfigs } from '@/lib/storage'
+import type { SheetConfig } from '@/types'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface Props {
@@ -22,6 +25,14 @@ export default function Sidebar({ open, onClose }: Props) {
   const router = useRouter()
   const { data: session } = useSession()
   const { t } = useI18n()
+  const [savedSheets, setSavedSheets] = useState<SheetConfig[]>([])
+
+  useEffect(() => {
+    const configs = loadAllConfigs()
+    setSavedSheets(Object.values(configs).sort((a, b) =>
+      (b.savedAt ?? '').localeCompare(a.savedAt ?? '')
+    ))
+  }, [pathname])
 
   const navigate = (href: string) => {
     router.push(href)
@@ -42,17 +53,40 @@ export default function Sidebar({ open, onClose }: Props) {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {NAV_ITEMS.map(({ href, icon: Icon, labelKey }) => (
           <button
             key={href}
             onClick={() => navigate(href)}
-            className={cn('nav-link w-full text-left', pathname.startsWith(href) && 'active')}
+            className={cn('nav-link w-full text-left', pathname === href && 'active')}
           >
             <Icon className="w-4 h-4" />
             {t(labelKey)}
           </button>
         ))}
+
+        {savedSheets.length > 0 && (
+          <div className="pt-3">
+            <div className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-widest text-[hsl(var(--muted-fg))]">
+              Saved Sheets
+            </div>
+            {savedSheets.map((sheet) => {
+              const href = `/dashboard/analytics/${sheet.sheetId}`
+              const isActive = pathname.startsWith(href)
+              return (
+                <button
+                  key={sheet.sheetId}
+                  onClick={() => navigate(href)}
+                  className={cn('nav-link w-full text-left', isActive && 'active')}
+                  title={sheet.sheetName}
+                >
+                  <TableProperties className="w-4 h-4 shrink-0" />
+                  <span className="truncate">{sheet.sheetName}</span>
+                </button>
+              )
+            })}
+          </div>
+        )}
       </nav>
 
       {/* User */}
