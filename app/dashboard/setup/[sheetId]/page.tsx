@@ -85,7 +85,7 @@ export default function SetupPage() {
         const detectedKeys = new Set<string>()
         for (const [field, header] of Object.entries(detected)) {
           if (header) {
-            ;(newMap as Record<string, string>)[field] = header
+            ;(newMap as unknown as Record<string, string>)[field] = header
             detectedKeys.add(field)
           }
         }

@@ -59,7 +59,7 @@ export default function CategoryPieChart({ analytics, loading, expanded }: Props
                 dataKey="total"
                 nameKey="category"
               >
-                {data.map((entry, index) => (
+                {data.map((entry) => (
                   <Cell key={entry.category} fill={entry.color} stroke="transparent" />
                 ))}
               </Pie>

@@ -12,8 +12,6 @@ import type {
 } from '@/types'
 import {
   format,
-  startOfMonth,
-  endOfMonth,
   eachDayOfInterval,
   differenceInCalendarDays,
   getDay,
@@ -25,7 +23,7 @@ let _idCounter = 0
 function nextId() { return `txn_${++_idCounter}` }
 
 const INCOME_KEYWORDS = /^(income|salary|revenue|payment received|received|credit|deposit|earning|wage|bonus|refund)/i
-const EXPENSE_KEYWORDS = /^(expense|debit|charge|payment|withdrawal|spend|cost)/i
+// const EXPENSE_KEYWORDS = /^(expense|debit|charge|payment|withdrawal|spend|cost)/i
 
 export function normalizeRows(
   rows: string[][],
@@ -44,7 +42,6 @@ export function normalizeRows(
     return i >= 0 ? (row[i] ?? '').trim() : ''
   }
 
-  const headerRow = headers
   const dataRows = rows.filter((row) => {
     // Skip empty rows and rows that look like headers
     if (!row || row.length === 0) return false

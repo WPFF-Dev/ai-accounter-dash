@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh auth:*)",
+      "Bash(gh repo:*)",
+      "Bash(railway --version)",
+      "Bash(brew install:*)",
+      "Bash(npm install:*)",
+      "Bash(node --version which npm)",
+      "Bash(npm --version ls /usr/local/bin/node /opt/homebrew/bin/node ~/.nvm/versions/node/*/bin/node)",
+      "Bash(/usr/local/bin/npm install:*)",
+      "Bash(/opt/homebrew/bin/node --version)",
+      "Bash(/opt/homebrew/bin/npm --version)",
+      "Bash(/opt/homebrew/Cellar/node/25.8.1_1/bin/node --version)",
+      "Bash(/opt/homebrew/Cellar/node/25.8.1_1/bin/npm --version)",
+      "Read(//opt/homebrew/Cellar/node/25.8.1_1/bin/**)",
+      "Bash(xxd /opt/homebrew/Cellar/node/25.8.1_1/bin/node)",
+      "Bash(arch -arm64 /opt/homebrew/Cellar/node/25.8.1_1/bin/node --version)",
+      "Bash(arch -arm64 /opt/homebrew/Cellar/node/25.8.1_1/bin/npm install -g @railway/cli)",
+      "Bash(curl -L \"https://github.com/railwayapp/cli/releases/download/v4.36.0/railway-v4.36.0-aarch64-apple-darwin.tar.gz\" -o /tmp/railway.tar.gz)",
+      "Read(//private/tmp/**)",
+      "Bash(1 ls:*)",
+      "Bash(chmod +x /tmp/railway)",
+      "Bash(/tmp/railway --version)",
+      "Bash(/tmp/railway whoami:*)",
+      "Bash(RAILWAY_TOKEN=08be8050-61cc-4748-8071-1e50ebb1b9c6 /tmp/railway whoami)",
+      "Bash(/tmp/railway login:*)",
+      "Bash(RAILWAY_TOKEN=3a3104a9-4698-4916-a0c5-f5144c90bf1e /tmp/railway whoami)",
+      "Bash(python3 -c \":*)",
+      "Bash(python3 -m json.tool)"
+    ]
+  }
+}

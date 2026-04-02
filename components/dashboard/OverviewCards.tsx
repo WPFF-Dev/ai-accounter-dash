@@ -60,8 +60,6 @@ export default function OverviewCards({ analytics, loading }: Props) {
   const { t } = useI18n()
   const currency = 'USD'
 
-  const netColor = !analytics ? '' : analytics.netBalance >= 0 ? 'text-green-600' : 'text-red-500'
-
   const cards = [
     {
       label: t('overview.totalExpenses'),
