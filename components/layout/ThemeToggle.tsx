@@ -9,15 +9,22 @@ export default function ThemeToggle() {
   const { theme, setTheme } = useTheme()
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    setMounted(true)
     const handler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
   }, [])
+
+  // Avoid hydration mismatch: render placeholder until mounted
+  if (!mounted) {
+    return <div className="btn-ghost p-2 w-8 h-8" />
+  }
 
   const Icon = theme === 'dark' ? Moon : theme === 'light' ? Sun : Monitor
 

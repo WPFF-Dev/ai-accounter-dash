@@ -8,21 +8,29 @@ export function cn(...inputs: ClassValue[]) {
 
 // ─── Currency ─────────────────────────────────────────────────────────────
 
+// Map currency codes to their symbols for environments with limited ICU data
+const CURRENCY_SYMBOLS: Record<string, string> = {
+  UAH: '₴',
+  USD: '$',
+  EUR: '€',
+  GBP: '£',
+  RUB: '₽',
+  PLN: 'zł',
+  CZK: 'Kč',
+  ILS: '₪',
+}
+
 export function formatCurrency(
   amount: number,
   currency = 'USD',
 ): string {
-  try {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency,
-      currencyDisplay: 'narrowSymbol',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-    }).format(amount)
-  } catch {
-    return `${currency} ${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`
-  }
+  const code = currency.toUpperCase()
+  const symbol = CURRENCY_SYMBOLS[code] ?? code
+  const formatted = amount.toLocaleString('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  })
+  return `${symbol}${formatted}`
 }
 
 export function formatNumber(n: number, decimals = 0): string {
