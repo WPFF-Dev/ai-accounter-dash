@@ -57,6 +57,8 @@
   "filter.last6Months": "6 місяців",
   "filter.thisYear": "Цей рік",
   "filter.lastYear": "Минулий рік",
+  "filter.selectYear": "Вибрати рік",
+  "filter.year": "Рік",
   "filter.custom": "Довільний період",
   "filter.from": "З",
   "filter.to": "По",

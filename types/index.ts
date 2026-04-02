@@ -85,6 +85,7 @@ export type DateRangePreset =
   | 'last_6_months'
   | 'this_year'
   | 'last_year'
+  | 'select_year'
   | 'custom'
 
 export interface DateRange {

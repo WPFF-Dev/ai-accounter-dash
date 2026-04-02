@@ -57,6 +57,8 @@
   "filter.last6Months": "Last 6 Months",
   "filter.thisYear": "This Year",
   "filter.lastYear": "Last Year",
+  "filter.selectYear": "Select Year",
+  "filter.year": "Year",
   "filter.custom": "Custom Range",
   "filter.from": "From",
   "filter.to": "To",

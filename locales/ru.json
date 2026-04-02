@@ -57,6 +57,8 @@
   "filter.last6Months": "6 месяцев",
   "filter.thisYear": "Этот год",
   "filter.lastYear": "Прошлый год",
+  "filter.selectYear": "Выбрать год",
+  "filter.year": "Год",
   "filter.custom": "Произвольный период",
   "filter.from": "С",
   "filter.to": "По",

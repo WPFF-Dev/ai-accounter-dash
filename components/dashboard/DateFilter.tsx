@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Calendar, ChevronDown } from 'lucide-react'
+import { Calendar } from 'lucide-react'
 import { format } from 'date-fns'
 import { useI18n } from '@/lib/i18n'
 import type { DateRange, DateRangePreset } from '@/types'
@@ -13,16 +13,18 @@ import {
 interface Props {
   value: DateRange
   onChange: (range: DateRange) => void
+  availableYears?: number[]
 }
 
 const PRESETS: { value: DateRangePreset; labelKey: string }[] = [
-  { value: 'this_month',   labelKey: 'filter.thisMonth' },
-  { value: 'last_month',   labelKey: 'filter.lastMonth' },
+  { value: 'this_month',    labelKey: 'filter.thisMonth' },
+  { value: 'last_month',    labelKey: 'filter.lastMonth' },
   { value: 'last_3_months', labelKey: 'filter.last3Months' },
   { value: 'last_6_months', labelKey: 'filter.last6Months' },
-  { value: 'this_year',    labelKey: 'filter.thisYear' },
-  { value: 'last_year',    labelKey: 'filter.lastYear' },
-  { value: 'custom',       labelKey: 'filter.custom' },
+  { value: 'this_year',     labelKey: 'filter.thisYear' },
+  { value: 'last_year',     labelKey: 'filter.lastYear' },
+  { value: 'select_year',   labelKey: 'filter.selectYear' },
+  { value: 'custom',        labelKey: 'filter.custom' },
 ]
 
 function getRange(preset: DateRangePreset): DateRange {
@@ -44,17 +46,44 @@ function getRange(preset: DateRangePreset): DateRange {
   }
 }
 
-export default function DateFilter({ value, onChange }: Props) {
+function getRangeForYear(year: number): DateRange {
+  const d = new Date(year, 0, 1)
+  return { from: startOfYear(d), to: endOfYear(d), preset: 'select_year' }
+}
+
+export default function DateFilter({ value, onChange, availableYears = [] }: Props) {
   const { t } = useI18n()
   const [showCustom, setShowCustom] = useState(value.preset === 'custom')
+  const [showYearPicker, setShowYearPicker] = useState(value.preset === 'select_year')
+  const [selectedYear, setSelectedYear] = useState<number>(
+    value.preset === 'select_year' ? value.from.getFullYear() : new Date().getFullYear()
+  )
+
+  // Build year list: availableYears or fallback to current ± 5
+  const years = availableYears.length > 0
+    ? [...availableYears].sort((a, b) => b - a)
+    : Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i)
 
   const handlePreset = (preset: DateRangePreset) => {
     if (preset === 'custom') {
       setShowCustom(true)
+      setShowYearPicker(false)
+      return
+    }
+    if (preset === 'select_year') {
+      setShowYearPicker(true)
+      setShowCustom(false)
+      onChange(getRangeForYear(selectedYear))
       return
     }
     setShowCustom(false)
+    setShowYearPicker(false)
     onChange(getRange(preset))
+  }
+
+  const handleYearChange = (year: number) => {
+    setSelectedYear(year)
+    onChange(getRangeForYear(year))
   }
 
   const handleCustom = (field: 'from' | 'to', val: string) => {
@@ -92,6 +121,28 @@ export default function DateFilter({ value, onChange }: Props) {
           {format(value.from, 'MMM d, yyyy')} – {format(value.to, 'MMM d, yyyy')}
         </div>
       </div>
+
+      {/* Year picker */}
+      {showYearPicker && (
+        <div className="flex items-center gap-3 mt-3 pt-3 border-t border-[hsl(var(--border))]">
+          <label className="text-xs text-[hsl(var(--muted-fg))] shrink-0">{t('filter.year')}</label>
+          <div className="flex flex-wrap gap-1.5">
+            {years.map((yr) => (
+              <button
+                key={yr}
+                onClick={() => handleYearChange(yr)}
+                className={`px-3 py-1 rounded-lg text-xs font-medium transition-all
+                  ${selectedYear === yr
+                    ? 'bg-brand-500 text-white'
+                    : 'bg-[hsl(var(--surface-raised))] text-[hsl(var(--muted-fg))] hover:text-[hsl(var(--foreground))]'
+                  }`}
+              >
+                {yr}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Custom range inputs */}
       {showCustom && (

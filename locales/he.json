@@ -57,6 +57,8 @@
   "filter.last6Months": "6 חודשים אחרונים",
   "filter.thisYear": "השנה",
   "filter.lastYear": "שנה שעברה",
+  "filter.selectYear": "בחר שנה",
+  "filter.year": "שנה",
   "filter.custom": "טווח מותאם",
   "filter.from": "מ-",
   "filter.to": "עד",

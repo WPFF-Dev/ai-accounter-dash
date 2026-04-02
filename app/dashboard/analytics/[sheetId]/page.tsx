@@ -133,6 +133,13 @@ export default function AnalyticsPage() {
     return Array.from(seen).sort()
   }, [transactions])
 
+  // Unique years from transaction data
+  const availableYears = useMemo(() => {
+    const seen = new Set<number>()
+    for (const t of transactions) seen.add(t.date.getFullYear())
+    return Array.from(seen).sort((a, b) => b - a)
+  }, [transactions])
+
   const handleExportCSV = () => {
     if (!transactions.length) return
     const headers = ['Date', 'Description', 'Category', 'Amount', 'Type', 'Currency', 'Payment Method', 'Tab']
@@ -200,7 +207,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Date Filter */}
-      <DateFilter value={dateRange} onChange={setDateRange} />
+      <DateFilter value={dateRange} onChange={setDateRange} availableYears={availableYears} />
 
       {/* Error */}
       {error && (
