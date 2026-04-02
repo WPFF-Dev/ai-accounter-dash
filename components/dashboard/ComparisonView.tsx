@@ -26,6 +26,14 @@ function getAvailableMonths(txns: Transaction[]) {
 export default function ComparisonView({ transactions }: Props) {
   const { t } = useI18n()
   const months = useMemo(() => getAvailableMonths(transactions), [transactions])
+  const currency = useMemo(() => {
+    const counts: Record<string, number> = {}
+    for (const t of transactions) {
+      const c = t.currency?.trim().toUpperCase()
+      if (c) counts[c] = (counts[c] ?? 0) + 1
+    }
+    return Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? 'USD'
+  }, [transactions])
   const [period1, setPeriod1] = useState(months[0] ?? '')
   const [period2, setPeriod2] = useState(months[Math.min(12, months.length - 1)] ?? '')
 
@@ -120,11 +128,11 @@ export default function ComparisonView({ transactions }: Props) {
                 <div className="flex items-end justify-between gap-2">
                   <div>
                     <div className="text-xs text-[hsl(var(--muted-fg))]">{comparison.period1.label}</div>
-                    <div className="text-lg font-bold tabular-nums">{formatCurrency(p1)}</div>
+                    <div className="text-lg font-bold tabular-nums">{formatCurrency(p1, currency)}</div>
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-[hsl(var(--muted-fg))]">{comparison.period2.label}</div>
-                    <div className="text-lg font-bold tabular-nums">{formatCurrency(p2)}</div>
+                    <div className="text-lg font-bold tabular-nums">{formatCurrency(p2, currency)}</div>
                   </div>
                 </div>
                 <div className={`flex items-center gap-1 text-sm font-semibold ${
@@ -132,7 +140,7 @@ export default function ComparisonView({ transactions }: Props) {
                 }`}>
                   <span>{formatPercent(pct)}</span>
                   <span className="text-xs font-normal text-[hsl(var(--muted-fg))]">
-                    ({diff >= 0 ? '+' : ''}{formatCurrency(diff)})
+                    ({diff >= 0 ? '+' : ''}{formatCurrency(diff, currency)})
                   </span>
                 </div>
               </div>
@@ -152,7 +160,7 @@ export default function ComparisonView({ transactions }: Props) {
                   tickFormatter={(v) => `$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`}
                 />
                 <Tooltip
-                  formatter={(v: number) => formatCurrency(v)}
+                  formatter={(v: number) => formatCurrency(v, currency)}
                   contentStyle={{
                     background: 'hsl(var(--surface))',
                     border: '1px solid hsl(var(--border))',
@@ -179,7 +187,7 @@ export default function ComparisonView({ transactions }: Props) {
                     <div key={cat.category} className="flex items-center gap-2 text-sm">
                       <div className="w-2 h-2 rounded-full shrink-0" style={{ background: cat.color }} />
                       <span className="flex-1 truncate">{cat.category}</span>
-                      <span className="tabular-nums font-medium">{formatCurrency(cat.total)}</span>
+                      <span className="tabular-nums font-medium">{formatCurrency(cat.total, currency)}</span>
                     </div>
                   ))}
                 </div>

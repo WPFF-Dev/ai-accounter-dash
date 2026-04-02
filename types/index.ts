@@ -136,6 +136,7 @@ export interface AnalyticsSummary {
   topCategoryAmount: number
   largestTransaction: Transaction | null
   dateRange: DateRange
+  currency: string           // dominant currency detected from transactions
   categories: CategorySummary[]
   monthly: MonthlyData[]
   daily: DailyData[]

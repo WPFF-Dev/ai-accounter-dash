@@ -29,7 +29,7 @@ function CustomTooltip({ active, payload, label }: {
             <div className="w-2 h-2 rounded-full" style={{ background: p.color }} />
             <span className="capitalize">{p.name}</span>
           </div>
-          <span className="font-semibold tabular-nums">{formatCurrency(p.value)}</span>
+          <span className="font-semibold tabular-nums">{formatCurrency(p.value, currency)}</span>
         </div>
       ))}
     </div>
@@ -39,6 +39,7 @@ function CustomTooltip({ active, payload, label }: {
 export default function TimeSeriesChart({ analytics, loading, expanded }: Props) {
   const { t } = useI18n()
   const height = expanded ? 360 : 240
+  const currency = analytics?.currency ?? 'USD'
 
   // Aggregate daily data to weekly if too many points
   const raw = analytics?.daily ?? []

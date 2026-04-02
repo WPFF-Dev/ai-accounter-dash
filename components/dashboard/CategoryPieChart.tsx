@@ -1,10 +1,10 @@
 'use client'
 
 import {
-  ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend,
+  ResponsiveContainer, PieChart, Pie, Cell, Tooltip,
 } from 'recharts'
 import { useI18n } from '@/lib/i18n'
-import { formatCurrency, formatNumber } from '@/lib/utils'
+import { formatCurrency } from '@/lib/utils'
 import type { AnalyticsSummary } from '@/types'
 
 interface Props {
@@ -13,28 +13,29 @@ interface Props {
   expanded?: boolean
 }
 
-function CustomTooltip({ active, payload }: {
-  active?: boolean
-  payload?: { name: string; value: number; payload: { percentage: number; color: string } }[]
-}) {
-  if (!active || !payload?.length) return null
-  const { name, value, payload: p } = payload[0]
-  return (
-    <div className="card p-3 shadow-card-hover text-sm min-w-[160px]">
-      <div className="flex items-center gap-1.5 mb-1">
-        <div className="w-2 h-2 rounded-full" style={{ background: p.color }} />
-        <span className="font-medium">{name}</span>
-      </div>
-      <div className="tabular-nums">{formatCurrency(value)}</div>
-      <div className="text-[hsl(var(--muted-fg))] text-xs">{p.percentage.toFixed(1)}%</div>
-    </div>
-  )
-}
-
 export default function CategoryPieChart({ analytics, loading, expanded }: Props) {
   const { t } = useI18n()
   const size = expanded ? 300 : 200
   const data = analytics?.categories.slice(0, 10) ?? []
+  const currency = analytics?.currency ?? 'USD'
+
+  const CustomTooltip = ({ active, payload }: {
+    active?: boolean
+    payload?: { name: string; value: number; payload: { percentage: number; color: string } }[]
+  }) => {
+    if (!active || !payload?.length) return null
+    const { name, value, payload: p } = payload[0]
+    return (
+      <div className="card p-3 shadow-card-hover text-sm min-w-[160px]">
+        <div className="flex items-center gap-1.5 mb-1">
+          <div className="w-2 h-2 rounded-full" style={{ background: p.color }} />
+          <span className="font-medium">{name}</span>
+        </div>
+        <div className="tabular-nums">{formatCurrency(value, currency)}</div>
+        <div className="text-[hsl(var(--muted-fg))] text-xs">{p.percentage.toFixed(1)}%</div>
+      </div>
+    )
+  }
 
   return (
     <div className="card p-5">
@@ -73,7 +74,7 @@ export default function CategoryPieChart({ analytics, loading, expanded }: Props
               <div key={cat.category} className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full shrink-0" style={{ background: cat.color }} />
                 <span className="text-sm flex-1 truncate">{cat.category}</span>
-                <span className="text-sm font-medium tabular-nums">{formatCurrency(cat.total)}</span>
+                <span className="text-sm font-medium tabular-nums">{formatCurrency(cat.total, currency)}</span>
                 <span className="text-xs text-[hsl(var(--muted-fg))] w-10 text-right tabular-nums">
                   {cat.percentage.toFixed(0)}%
                 </span>

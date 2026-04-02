@@ -117,6 +117,16 @@ export function buildAnalytics(
   const expenses = filtered.filter((t) => t.isExpense)
   const income = filtered.filter((t) => !t.isExpense)
 
+  // Detect dominant currency (most frequent non-empty value)
+  const currencyCount: Record<string, number> = {}
+  for (const t of filtered) {
+    const c = t.currency?.trim().toUpperCase()
+    if (c && c !== 'USD' || c === 'USD') {
+      currencyCount[c] = (currencyCount[c] ?? 0) + 1
+    }
+  }
+  const currency = Object.entries(currencyCount).sort((a, b) => b[1] - a[1])[0]?.[0] ?? 'USD'
+
   const totalExpenses = sumBy(expenses, (t) => t.amount)
   const totalIncome = sumBy(income, (t) => t.amount)
   const netBalance = totalIncome - totalExpenses
@@ -213,6 +223,7 @@ export function buildAnalytics(
     topCategoryAmount,
     largestTransaction,
     dateRange,
+    currency,
     categories,
     monthly,
     daily,

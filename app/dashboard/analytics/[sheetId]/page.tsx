@@ -53,6 +53,7 @@ export default function AnalyticsPage() {
   const [error, setError] = useState('')
   const [dateRange, setDateRange] = useState<DateRange>(getPresetRange('this_month'))
   const [activeTab, setActiveTab] = useState('overview')
+  const [currencyOverride, setCurrencyOverride] = useState<string>('')
 
   // Load config
   useEffect(() => {
@@ -116,8 +117,21 @@ export default function AnalyticsPage() {
 
   const analytics = useMemo<AnalyticsSummary | null>(() => {
     if (transactions.length === 0) return null
-    return buildAnalytics(transactions, dateRange)
-  }, [transactions, dateRange])
+    const result = buildAnalytics(transactions, dateRange)
+    // Apply manual currency override if set
+    if (currencyOverride) result.currency = currencyOverride
+    return result
+  }, [transactions, dateRange, currencyOverride])
+
+  // Unique currencies detected across all transactions
+  const availableCurrencies = useMemo(() => {
+    const seen = new Set<string>()
+    for (const t of transactions) {
+      const c = t.currency?.trim().toUpperCase()
+      if (c) seen.add(c)
+    }
+    return Array.from(seen).sort()
+  }, [transactions])
 
   const handleExportCSV = () => {
     if (!transactions.length) return
@@ -154,7 +168,20 @@ export default function AnalyticsPage() {
             {transactions.length} {t('common.transactions')}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Currency picker */}
+          {availableCurrencies.length > 0 && (
+            <select
+              value={currencyOverride || analytics?.currency || ''}
+              onChange={(e) => setCurrencyOverride(e.target.value)}
+              className="select text-xs py-1.5 w-24"
+              title={t('common.currency')}
+            >
+              {availableCurrencies.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          )}
           <button onClick={handleExportCSV} className="btn-secondary text-xs">
             <Download className="w-3.5 h-3.5" />
             {t('export.csv')}

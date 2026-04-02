@@ -28,7 +28,7 @@ function CustomTooltip({ active, payload, label }: {
             <div className="w-2 h-2 rounded-full" style={{ background: p.color }} />
             <span className="capitalize">{p.name}</span>
           </div>
-          <span className="font-semibold tabular-nums">{formatCurrency(p.value)}</span>
+          <span className="font-semibold tabular-nums">{formatCurrency(p.value, currency)}</span>
         </div>
       ))}
     </div>
@@ -39,6 +39,7 @@ export default function MonthlyBarChart({ analytics, loading }: Props) {
   const { t } = useI18n()
   const data = analytics?.monthly ?? []
   const hasIncome = data.some((d) => d.income > 0)
+  const currency = analytics?.currency ?? 'USD'
 
   return (
     <div className="card p-5">

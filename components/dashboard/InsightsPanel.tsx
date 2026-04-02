@@ -30,7 +30,7 @@ export default function InsightsPanel({ analytics, loading }: Props) {
     )
   }
 
-  const { categories, largestTransaction, recurringExpenses, anomalies, monthly } = analytics
+  const { categories, largestTransaction, recurringExpenses, anomalies, monthly, currency = 'USD' } = analytics
 
   // Calculate month-over-month trend
   const trend = monthly.length >= 2
@@ -56,7 +56,7 @@ export default function InsightsPanel({ analytics, loading }: Props) {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-[hsl(var(--muted-fg))]">{cat.percentage.toFixed(0)}%</span>
-                  <span className="font-semibold tabular-nums">{formatCurrency(cat.total)}</span>
+                  <span className="font-semibold tabular-nums">{formatCurrency(cat.total, currency)}</span>
                 </div>
               </div>
               <div className="h-1.5 bg-[hsl(var(--muted))] rounded-full overflow-hidden">
@@ -89,7 +89,7 @@ export default function InsightsPanel({ analytics, loading }: Props) {
                 </div>
               </div>
               <span className="text-sm font-bold text-red-500 tabular-nums shrink-0">
-                {formatCurrency(txn.amount)}
+                {formatCurrency(txn.amount, currency)}
               </span>
             </div>
           ))}
@@ -120,7 +120,7 @@ export default function InsightsPanel({ analytics, loading }: Props) {
                   </div>
                 </div>
                 <span className="text-sm font-semibold tabular-nums shrink-0">
-                  ~{formatCurrency(r.avgAmount)}
+                  ~{formatCurrency(r.avgAmount, currency)}
                 </span>
               </div>
             ))}
@@ -158,12 +158,12 @@ export default function InsightsPanel({ analytics, loading }: Props) {
               <div className="text-sm">
                 <span className="text-[hsl(var(--muted-fg))]">Best month: </span>
                 <strong>{monthly.reduce((a, b) => a.expenses < b.expenses ? a : b).label}</strong>
-                <span className="text-[hsl(var(--muted-fg))]"> ({formatCurrency(Math.min(...monthly.map((m) => m.expenses)))})</span>
+                <span className="text-[hsl(var(--muted-fg))]"> ({formatCurrency(Math.min(...monthly.map((m) => m.expenses)), currency)})</span>
               </div>
               <div className="text-sm">
                 <span className="text-[hsl(var(--muted-fg))]">Highest month: </span>
                 <strong>{monthly.reduce((a, b) => a.expenses > b.expenses ? a : b).label}</strong>
-                <span className="text-[hsl(var(--muted-fg))]"> ({formatCurrency(Math.max(...monthly.map((m) => m.expenses)))})</span>
+                <span className="text-[hsl(var(--muted-fg))]"> ({formatCurrency(Math.max(...monthly.map((m) => m.expenses)), currency)})</span>
               </div>
             </>
           )}

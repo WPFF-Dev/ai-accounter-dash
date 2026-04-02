@@ -58,7 +58,7 @@ function StatCard({
 
 export default function OverviewCards({ analytics, loading }: Props) {
   const { t } = useI18n()
-  const currency = 'USD'
+  const currency = analytics?.currency ?? 'USD'
 
   const cards = [
     {

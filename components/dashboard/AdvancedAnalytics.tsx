@@ -31,7 +31,7 @@ export default function AdvancedAnalytics({ analytics, loading }: Props) {
     <div className="card p-12 text-center text-[hsl(var(--muted-fg))]">{t('common.noData')}</div>
   )
 
-  const { weekdays } = analytics
+  const { weekdays, currency = 'USD' } = analytics
   const maxWeekday = Math.max(...weekdays.map((w) => w.expenses), 1)
 
   return (
@@ -56,7 +56,7 @@ export default function AdvancedAnalytics({ analytics, loading }: Props) {
                 tickFormatter={(v) => `$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`}
               />
               <Tooltip
-                formatter={(v: number) => [formatCurrency(v), 'Expenses']}
+                formatter={(v: number) => [formatCurrency(v, currency), 'Expenses']}
                 contentStyle={{
                   background: 'hsl(var(--surface))',
                   border: '1px solid hsl(var(--border))',

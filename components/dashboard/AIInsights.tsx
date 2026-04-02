@@ -28,27 +28,28 @@ export default function AIInsights({ analytics }: Props) {
     savePrefs({ openaiKey: apiKey })
 
     // Build condensed summary for the API
+    const currency = analytics.currency ?? 'USD'
     const summary = {
       period: `${analytics.dateRange.from.toDateString()} to ${analytics.dateRange.to.toDateString()}`,
-      totalExpenses: formatCurrency(analytics.totalExpenses),
-      totalIncome: formatCurrency(analytics.totalIncome),
-      netBalance: formatCurrency(analytics.netBalance),
+      totalExpenses: formatCurrency(analytics.totalExpenses, currency),
+      totalIncome: formatCurrency(analytics.totalIncome, currency),
+      netBalance: formatCurrency(analytics.netBalance, currency),
       transactionCount: analytics.transactionCount,
-      avgDailySpend: formatCurrency(analytics.avgDailySpend),
-      avgMonthlySpend: formatCurrency(analytics.avgMonthlySpend),
+      avgDailySpend: formatCurrency(analytics.avgDailySpend, currency),
+      avgMonthlySpend: formatCurrency(analytics.avgMonthlySpend, currency),
       topCategories: analytics.categories.slice(0, 5).map((c) => ({
         name: c.category,
-        amount: formatCurrency(c.total),
+        amount: formatCurrency(c.total, currency),
         percentage: c.percentage.toFixed(1) + '%',
       })),
       recurringExpenses: analytics.recurringExpenses.slice(0, 5).map((r) => ({
         name: r.description,
-        avgAmount: formatCurrency(r.avgAmount),
+        avgAmount: formatCurrency(r.avgAmount, currency),
         frequency: r.frequency,
       })),
       spendingTrend: analytics.monthly.slice(-3).map((m) => ({
         month: m.label,
-        expenses: formatCurrency(m.expenses),
+        expenses: formatCurrency(m.expenses, currency),
       })),
     }
 
